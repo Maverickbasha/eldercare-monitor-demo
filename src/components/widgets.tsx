@@ -12,7 +12,7 @@ export function DemoControls() {
       <Button size="sm" variant="outline" onClick={s.triggerFall}><AlertTriangle /> Trigger Fall</Button>
       <Button size="sm" variant="destructive" onClick={s.triggerSos}><Siren /> Trigger SOS / Emergency</Button>
       <Button size="sm" variant="outline" onClick={s.recover}><RotateCcw /> Recover / Clear Alert</Button>
-      <Button size="sm" variant="secondary" onClick={s.togglePause} className="ml-auto">{s.running ? <><Pause /> Pause Simulation</> : <><Play /> Resume Simulation</>}</Button>
+      <Button size="sm" variant="secondary" onClick={s.togglePause}>{s.running ? <><Pause /> Pause Simulation</> : <><Play /> Resume Simulation</>}</Button>
     </div>
   );
 }
@@ -188,13 +188,13 @@ export function Pipeline() {
         <h3 className="font-semibold">End-to-end data flow</h3>
         <span className={`text-xs font-medium ${s.running ? "text-success" : "text-warning-foreground"}`}>{s.running ? "Streaming every 2 s" : "Paused"}</span>
       </div>
-      <div className="flex flex-wrap items-stretch gap-2">
+      <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7">
         {steps.map((st, i) => {
           const hot = alertOn && (i === 0 || i >= 1);
           const isLast = i === steps.length - 1;
           return (
-            <div key={st.label} className="flex items-center gap-2">
-              <div className={`w-36 rounded-lg border p-3 transition ${hot ? "border-destructive/50 bg-destructive/5" : "bg-muted/40"} ${isLast && alertOn ? "emergency-glow" : ""}`}>
+            <div key={st.label} className="flex min-w-0 items-center gap-1">
+              <div className={`min-w-0 flex-1 rounded-lg border p-3 transition ${hot ? "border-destructive/50 bg-destructive/5" : "bg-muted/40"} ${isLast && alertOn ? "emergency-glow" : ""}`}>
                 <st.icon className={`size-5 ${hot ? "text-destructive" : "text-primary"}`} />
                 <div className="mt-2 text-sm font-medium leading-tight">{st.label}</div>
                 <div className="mt-0.5 truncate text-xs text-muted-foreground">{st.sub}</div>
