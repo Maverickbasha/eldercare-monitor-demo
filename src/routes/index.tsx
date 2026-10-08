@@ -1,24 +1,40 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { AppShell } from "@/components/shell";
+import { EventList, MotionCard, NoticeTimeline, PatientCard, Pipeline, RiskPanel, VitalCard } from "@/components/widgets";
+import { useSim } from "@/lib/sim";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
-  component: Index,
+  head: () => ({
+    meta: [
+      { title: "Dashboard — ElderCare AI Demo" },
+      { name: "description", content: "Real-time caregiver dashboard for the ElderCare AI wearable, running on simulated virtual hardware." },
+      { property: "og:title", content: "Dashboard — ElderCare AI Demo" },
+      { property: "og:description", content: "Live vitals, fall detection, SOS and AI risk prediction in simulation mode." },
+    ],
+  }),
+  component: Dashboard,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
+function Dashboard() {
+  const s = useSim();
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
+    <AppShell title="Caregiver Dashboard" subtitle="Continuous health monitoring with real-time fall detection and emergency SOS.">
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <VitalCard k="hr" /><VitalCard k="spo2" /><VitalCard k="temp" /><MotionCard />
+      </div>
+      <div className="mt-4"><Pipeline /></div>
+      <div className="mt-4 grid gap-4 xl:grid-cols-3">
+        <PatientCard />
+        <RiskPanel />
+        <div className="panel p-5">
+          <div className="mb-4 flex items-center justify-between"><h3 className="font-semibold">Caregiver notifications</h3><Link to="/alerts" className="text-sm text-primary">View all</Link></div>
+          <NoticeTimeline limit={3} />
+        </div>
+      </div>
+      <div className="panel mt-4 p-5">
+        <div className="mb-4 flex items-center justify-between"><h3 className="font-semibold">Recent events</h3><Link to="/history" className="text-sm text-primary">Health history</Link></div>
+        <EventList events={s.events} limit={5} />
+      </div>
+    </AppShell>
   );
 }
